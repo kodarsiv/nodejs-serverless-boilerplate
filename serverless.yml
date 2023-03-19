@@ -1,0 +1,80 @@
+service: nodejs-serverless-boilerplate
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: aws_serverless_user
+  region: 'us-east-1'
+  environment:
+      JWT_SECRET: your_jwt_secret
+      tableOfHello: ${self:custom.table_name_in_yml}
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:*
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: '*'
+plugins:
+  - serverless-s3-sync
+  - serverless-webpack
+  - serverless-offline
+
+package:
+  individually: true
+
+custom:
+  table_name_in_yml: real_table_name
+  s3Sync:
+    - bucketName: nodejs-serverless-bucket-1234567
+      localDir: uploads
+  dynamodb:
+      stages:
+        - dev
+      start:
+        port: 8000
+        inMemory: true
+        migrate: true
+      migration:
+        dir: offline/migrations
+
+functions:
+  login:
+    handler: lambdas/functions/hello.handler
+    events:
+      - http:
+          path: /hello
+          method: post
+          cors: true
+resources:
+  Resources:
+    NodeBucketUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: nodejs-serverless-bucket-12333
+    DynamoUsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.table_name_in_yml}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
+        GlobalSecondaryIndexes:
+          - IndexName: email-index
+            KeySchema:
+              - AttributeName: email
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL

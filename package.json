@@ -1,0 +1,38 @@
+{
+  "name": "nodejs-serverless-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate for serverless node js application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodarsiv/nodejs-serverless-boilerplate.git"
+  },
+  "keywords": [
+    "serverless",
+    "boilerplate",
+    "nodejs",
+    "lambda"
+  ],
+  "author": "Taner tombas <tombastaner@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kodarsiv/nodejs-serverless-boilerplate/issues"
+  },
+  "homepage": "https://github.com/kodarsiv/nodejs-serverless-boilerplate#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1338.0",
+    "joi": "^17.8.4",
+    "jsonwebtoken": "^9.0.0",
+    "serverless-s3-sync": "^3.1.0",
+    "serverless-webpack": "^5.11.0",
+    "uuid": "^9.0.0",
+    "webpack": "^5.76.2"
+  },
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.25",
+    "serverless-offline": "^12.0.4"
+  }
+}
